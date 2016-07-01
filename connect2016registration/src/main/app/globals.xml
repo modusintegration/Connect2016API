@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:apikit="http://www.mulesoft.org/schema/mule/apikit"
+	xmlns:tls="http://www.mulesoft.org/schema/mule/tls"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns:mule-ss="http://www.mulesoft.org/schema/mule/spring-security"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:spring="http://www.springframework.org/schema/beans" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:ss="http://www.springframework.org/schema/security"
+	xsi:schemaLocation="http://www.mulesoft.org/schema/mule/apikit http://www.mulesoft.org/schema/mule/apikit/current/mule-apikit.xsd
+http://www.mulesoft.org/schema/mule/tls http://www.mulesoft.org/schema/mule/tls/current/mule-tls.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/spring-security http://www.mulesoft.org/schema/mule/spring-security/current/mule-spring-security.xsd
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.0.xsd">
+<http:request-config name="HTTP_Request_Configuration" protocol="HTTPS" host="docs.google.com" port="443" doc:name="HTTP Request Configuration" />
+    <!-- http:listener-config name="connectRegistration-httpListenerConfig" host="0.0.0.0" port="${https.port}" doc:name="HTTP Listener Configuration" protocol="HTTPS">
+        <tls:context>
+            <tls:key-store type="jks" path="test.jks" alias="modusbox connect" keyPassword="abcd12345" password="abcd12345"/>
+        </tls:context>
+    </http:listener-config> -->
+    <http:listener-config name="connectRegistration-httpListenerConfig" host="0.0.0.0" port="${http.port}" doc:name="HTTP Listener Configuration" >
+    </http:listener-config>
+    <apikit:config name="connectRegistration-config" raml="connectRegistration.raml" consoleEnabled="true" consolePath="console" doc:name="Router" />
+    <spring:beans>
+		<ss:authentication-manager alias="muleBasicAuth" >
+			<ss:authentication-provider>
+				<ss:user-service id="userService">
+					<ss:user name="user" password="password" authorities="ROLE_ADMIN" />
+				</ss:user-service>
+			</ss:authentication-provider>
+		</ss:authentication-manager>
+	</spring:beans>
+	<mule-ss:security-manager name="SecurityManager1" doc:name="Spring Security Provider">
+		<mule-ss:delegate-security-provider name="memory-provider" delegate-ref="muleBasicAuth" />
+  	</mule-ss:security-manager>
+  	</mule>

@@ -1,0 +1,17 @@
+#%RAML 0.8
+title: ConnectRegistration
+version: 1.0
+/Register:
+  post:
+    body:
+      application/json:
+        schema: !include registrationSchema.json
+        example: |
+          {
+            "firstName": "John",
+            "lastName": "Smith",
+            "company": "Bizco",
+            "email": "johnemail.com",
+            "telephone": "11122222345",
+            "companyRole": "Architect"
+          }
